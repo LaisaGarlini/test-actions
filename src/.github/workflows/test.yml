@@ -1,0 +1,66 @@
+name: Testar Cálculo de Impostos
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      valor:
+        description: 'Valor em reais'
+        required: true
+        default: '100'
+        type: string
+      icms:
+        description: 'Percentual ICMS (%)'
+        required: true
+        default: '17'
+        type: string
+      pis:
+        description: 'Percentual PIS (%)'
+        required: true
+        default: '15'
+        type: string
+      cofins:
+        description: 'Percentual COFINS (%)'
+        required: true
+        default: '7.5'
+        type: string
+
+jobs:
+  calculate-taxes:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v4
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Executar teste com valores padrão
+      run: |
+        echo "=== TESTE AUTOMÁTICO (R$ 100) ==="
+        node src/calculate.js --valor 100 --icms 17 --pis 15 --cofins 7.5
+        
+        echo ""
+        echo "=== VERIFICAÇÃO DOS CÁLCULOS ==="
+        
+        # Teste com valores conhecidos
+        node src/calculate.js --valor 100 --icms 10 --pis 1 --cofins 5
+        
+        echo ""
+        echo "=== TESTE COM VALORES PERSONALIZADOS (se fornecido) ==="
+        
+        # Teste com valores do workflow_dispatch (se existirem)
+        if [ -n "${{ inputs.valor }}" ] && [ -n "${{ inputs.icms }}" ] && [ -n "${{ inputs.pis }}" ] && [ -n "${{ inputs.cofins }}" ]; then
+          node src/calculate.js \
+            --valor ${{ inputs.valor }} \
+            --icms ${{ inputs.icms }} \
+            --pis ${{ inputs.pis }} \
+            --cofins ${{ inputs.cofins }}
+        fi
