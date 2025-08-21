@@ -5,7 +5,7 @@
 
 # Calculadora de Impostos com GitHub Actions
 
-> Uma aplicação Node.js para cálculo automatizado de impostos (ICMS, PIS, COFINS) com sistema de testes contínuos via GitHub Actions.
+> Uma aplicação Node.js para cálculo (com fórmulas fictícias) automatizado de impostos (ICMS, PIS, COFINS) com sistema de testes contínuos via GitHub Actions.
 
 
 <h2>📋 Funcionalidades</h2>
